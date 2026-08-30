@@ -10,6 +10,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from build_teaching_corpus import build_corpus
+from recipe_parser import RecipeParser
 
 
 SAMPLE_RECIPE = """# 测试青椒肉丝的做法
@@ -33,8 +34,46 @@ SAMPLE_RECIPE = """# 测试青椒肉丝的做法
 - 不要一次下锅太多
 """
 
+NESTED_RECIPE = """# 测试宫保鸡丁的做法
+
+预估烹饪难度：★★★★
+
+## 必备原料和工具
+
+- 鸡肉
+- 盐
+
+### 可选原料
+
+- 花生
+
+## 操作
+
+### 简易版本
+
+- 鸡肉切丁
+- 大火翻炒鸡丁 30 秒
+
+### 复杂版本
+
+- 加入花生继续翻炒
+
+## 附加内容
+
+- 根据锅温调整时间
+"""
+
 
 class BuildTeachingCorpusTests(unittest.TestCase):
+    def test_parser_keeps_steps_below_nested_headings(self):
+        with tempfile.TemporaryDirectory() as temp:
+            recipe_path = Path(temp) / "nested.md"
+            recipe_path.write_text(NESTED_RECIPE, encoding="utf-8")
+            recipe = RecipeParser().parse(str(recipe_path))
+            self.assertEqual(3, len(recipe["steps"]))
+            self.assertIn("大火翻炒鸡丁 30 秒", recipe["steps"])
+            self.assertIn("花生", recipe["ingredients"])
+
     def test_builds_compact_corpus_and_reverse_failure_index(self):
         with tempfile.TemporaryDirectory() as temp:
             temp_path = Path(temp)

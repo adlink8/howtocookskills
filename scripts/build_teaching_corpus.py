@@ -19,7 +19,7 @@ import hashlib
 import json
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List
 
 from recipe_parser import RecipeParser
 from recipe_principle_annotator import PrincipleAnnotator, RULES
@@ -27,6 +27,17 @@ from recipe_principle_annotator import PrincipleAnnotator, RULES
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RECIPE_ROOT = ROOT / "data" / "dishes"
 DEFAULT_OUTPUT_DIR = ROOT / "generated"
+
+
+def portable_path(value: str | Path | None) -> str | None:
+    """Prefer repository-relative POSIX paths so generated data is relocatable."""
+    if value is None:
+        return None
+    path = Path(value)
+    try:
+        return path.resolve().relative_to(ROOT.resolve()).as_posix()
+    except (ValueError, OSError):
+        return path.as_posix()
 
 
 def iter_recipe_files(recipe_root: Path) -> Iterable[Path]:
@@ -66,7 +77,7 @@ def compact_annotation(annotation: Dict) -> Dict:
             "category": recipe.get("category", "unknown"),
             "difficulty": recipe.get("difficulty", 0),
             "ingredients": recipe.get("ingredients", []),
-            "source_path": recipe.get("source_path"),
+            "source_path": portable_path(recipe.get("source_path")),
         },
         "teaching_contract": annotation.get("teaching_contract", {}),
         "steps": [_compact_step(step) for step in annotation.get("steps", [])],
@@ -95,11 +106,13 @@ def _source_fingerprint(recipe_files: List[Path]) -> str:
     """Hash source recipe contents plus the rule catalog for reproducibility."""
     digest = hashlib.sha256()
     for path in recipe_files:
-        digest.update(str(path.relative_to(ROOT) if path.is_relative_to(ROOT) else path).encode("utf-8"))
+        digest.update(portable_path(path).encode("utf-8"))
         digest.update(b"\0")
         digest.update(path.read_bytes())
         digest.update(b"\0")
-    digest.update(json.dumps(principle_catalog(), ensure_ascii=False, sort_keys=True).encode("utf-8"))
+    digest.update(
+        json.dumps(principle_catalog(), ensure_ascii=False, sort_keys=True).encode("utf-8")
+    )
     return digest.hexdigest()
 
 
@@ -122,10 +135,7 @@ def build_failure_index(records: List[Dict], catalog: Dict) -> Dict:
                 for failure in rule["failures"]:
                     entry = failures.setdefault(
                         failure,
-                        {
-                            "principle_ids": [],
-                            "matches": [],
-                        },
+                        {"principle_ids": [], "matches": []},
                     )
                     if principle_id not in entry["principle_ids"]:
                         entry["principle_ids"].append(principle_id)
@@ -150,7 +160,6 @@ def build_failure_index(records: List[Dict], catalog: Dict) -> Dict:
                         }
                     )
 
-    # Stable ordering makes generated diffs reviewable.
     for failure, entry in failures.items():
         entry["principle_ids"].sort()
         entry["matches"].sort(
@@ -171,7 +180,10 @@ def _write_json(path: Path, payload: Dict) -> None:
     )
 
 
-def build_corpus(recipe_root: Path = DEFAULT_RECIPE_ROOT, output_dir: Path = DEFAULT_OUTPUT_DIR) -> Dict:
+def build_corpus(
+    recipe_root: Path = DEFAULT_RECIPE_ROOT,
+    output_dir: Path = DEFAULT_OUTPUT_DIR,
+) -> Dict:
     """Parse, annotate, index and write the complete teaching corpus."""
     parser = RecipeParser()
     annotator = PrincipleAnnotator()
@@ -194,12 +206,14 @@ def build_corpus(recipe_root: Path = DEFAULT_RECIPE_ROOT, output_dir: Path = DEF
     for file_path in files:
         try:
             recipe = parser.parse(str(file_path))
-        except Exception as exc:  # a bad recipe must not abort the complete corpus
-            skipped.append({"path": str(file_path), "reason": f"parse_error: {exc}"})
+        except Exception as exc:
+            skipped.append(
+                {"path": portable_path(file_path), "reason": f"parse_error: {exc}"}
+            )
             continue
 
         if not recipe.get("steps"):
-            skipped.append({"path": str(file_path), "reason": "no_steps"})
+            skipped.append({"path": portable_path(file_path), "reason": "no_steps"})
             continue
 
         record = compact_annotation(annotator.annotate_recipe(recipe))

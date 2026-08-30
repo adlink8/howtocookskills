@@ -1,0 +1,108 @@
+{
+  "failure_types": 19,
+  "files": {
+    "failure_index": "generated/failure_index.json",
+    "principle_catalog": "generated/principle_catalog.json",
+    "recipe_principles": "generated/recipe_principles.jsonl"
+  },
+  "principle_step_hits": {
+    "browning-aroma": 507,
+    "heat-transfer": 917,
+    "knife-size": 312,
+    "protein": 995,
+    "seasoning": 582,
+    "starch": 687,
+    "vegetable-water": 155,
+    "water-control": 254
+  },
+  "schema_version": "1.0",
+  "skipped": [
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/breakfast/手抓饼.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/condiment/蔗糖糖浆/蔗糖糖浆.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/dessert/龟苓膏/龟苓膏.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/drink/冬瓜茶.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/drink/可乐桶.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/drink/海边落日/海边落日.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/drink/金汤力/金汤力.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/drink/金菲士/金菲士.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/meat_dish/农家一碗香/农家一碗香.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/meat_dish/冷吃兔.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/meat_dish/麻辣香锅.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/soup/奶油蘑菇汤.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/soup/西红柿鸡蛋汤.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/soup/金针菇汤.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/staple/基础牛奶面包/基础牛奶面包.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/staple/炸酱面.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/vegetable_dish/白灼菜心/白灼菜心.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/vegetable_dish/红烧茄子.md",
+      "reason": "no_steps"
+    },
+    {
+      "path": "/home/runner/work/howtocookskills/howtocookskills/data/dishes/vegetable_dish/茄子炖土豆.md",
+      "reason": "no_steps"
+    }
+  ],
+  "source_fingerprint": "7ad7e30a88b0a776182366a1769274be06fe0f6e8c6353d4257f5ba34d67b157",
+  "stats": {
+    "explicit_temperature_steps": 70,
+    "explicit_time_steps": 622,
+    "recipe_files": 356,
+    "recipes_emitted": 337,
+    "recipes_skipped": 19,
+    "steps": 3409,
+    "tagged_steps": 2668,
+    "untagged_steps": 741
+  }
+}

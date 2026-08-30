@@ -1,0 +1,45 @@
+{
+  "schema": "howtocook.portable-skill/v1",
+  "name": "howtocook",
+  "display_name": "HowToCook Personal Cooking Tutor",
+  "version": "0.3.0",
+  "description": "Agent-neutral cooking tutor skill: recipe retrieval, cooking-principle explanation, variable reasoning and failure diagnosis.",
+  "instructions": "SKILL.md",
+  "runtime": {
+    "type": "cli",
+    "language": "python",
+    "minimum_python": "3.10",
+    "entrypoint": "python scripts/howtocook_cli.py",
+    "stdout_contract": "json-envelope-v1",
+    "network_required": false,
+    "third_party_dependencies": []
+  },
+  "actions": {
+    "search": "python scripts/howtocook_cli.py search",
+    "recipe": "python scripts/howtocook_cli.py recipe <name>",
+    "annotate": "python scripts/howtocook_cli.py annotate <name>",
+    "diagnose": "python scripts/howtocook_cli.py diagnose <symptom>",
+    "principles": "python scripts/howtocook_cli.py principles",
+    "status": "python scripts/howtocook_cli.py status"
+  },
+  "resources": {
+    "recipes": "data/dishes",
+    "recipe_index": "references/recipe_index.json",
+    "principles": "references/cooking_principles.md",
+    "learning_path": "references/learning_path.md",
+    "generated_corpus": "generated/recipe_principles.jsonl",
+    "failure_index": "generated/failure_index.json"
+  },
+  "portability": {
+    "agent_specific_core_logic": false,
+    "hardcoded_install_path": false,
+    "machine_readable_interface": true,
+    "adapters": [
+      "generic-shell",
+      "claude-code",
+      "codex",
+      "pi-agent",
+      "openai-agents-sdk"
+    ]
+  }
+}
